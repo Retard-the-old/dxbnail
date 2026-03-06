@@ -1459,8 +1459,10 @@
     .scroll-top { display: none; }
 
     /* Add bottom padding to body so content isn't hidden behind sticky bar */
-    body { padding-bottom: 120px; }
-    footer { padding-bottom: 130px; }
+    
+    /* No extra padding needed — bar is sticky, not fixed */
+    body { padding-bottom: 0; }
+    footer { padding-bottom: 16px; }
 
     /* Section spacing */
     .section-tag { font-size: 0.72rem; }
