@@ -1459,10 +1459,9 @@
     .scroll-top { display: none; }
 
     /* Add bottom padding to body so content isn't hidden behind sticky bar */
+    body { padding-bottom: 120px; }
+    footer { padding-bottom: 130px; }
     
-    /* No extra padding needed — bar is sticky, not fixed */
-    body { padding-bottom: 0; }
-    footer { padding-bottom: 16px; }
 
     /* Section spacing */
     .section-tag { font-size: 0.72rem; }
@@ -2244,26 +2243,27 @@
     lastScroll = scrollY;
   });
 
-  // Fix mobile CTA bar inside iframe — switches to sticky positioning
+ // Fix mobile CTA bar inside Wix iframe
 (function() {
   const bar = document.querySelector('.mobile-cta-bar');
-  if (!bar) return;
+  if (!bar || window.innerWidth > 768) return;
 
-  function applyIframeFix() {
-    bar.style.position = 'sticky';
+  // Force fixed positioning via JS (overrides any CSS)
+  function positionBar() {
+    bar.style.position = 'fixed';
     bar.style.bottom = '0';
     bar.style.left = '0';
     bar.style.right = '0';
     bar.style.width = '100%';
-    bar.style.marginTop = 'auto';
-    // Move to very end of body so sticky anchors to bottom
-    document.body.appendChild(bar);
+    bar.style.zIndex = '99999';
+    bar.style.margin = '0';
+    bar.style.borderRadius = '20px 20px 0 0';
   }
 
-  // Apply if inside iframe OR if on mobile (both cases need it)
-  if (window.self !== window.top || window.innerWidth <= 768) {
-    applyIframeFix();
-  }
+  positionBar();
+
+  // Re-apply on resize in case layout shifts
+  window.addEventListener('resize', positionBar);
 })();
 
 </script>
