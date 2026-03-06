@@ -1157,23 +1157,37 @@
 
   /* ─── MOBILE STICKY CTA BAR ─── */
   .mobile-cta-bar {
-    display: none;
-    position: fixed;
-    bottom: 12px;
-    left: 12px;
-    right: 12px;
+  display: none; /* still hidden on desktop */
+  /* remove: position: fixed, bottom, left, right, z-index from here */
+  /* JS handles it on mobile */
+  background: rgba(250, 247, 242, 0.25);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(196, 168, 130, 0.12);
+  border-radius: 20px;
+  box-shadow: 0 -4px 24px rgba(44, 33, 24, 0.08);
+  padding: 10px 10px;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .mobile-cta-bar {
+    display: flex;
+    position: sticky;   /* ← key change */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     z-index: 9500;
-    background: rgba(250, 247, 242, 0.25);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(196, 168, 130, 0.12);
-    border-radius: 20px;
-    box-shadow: 0 -4px 24px rgba(44, 33, 24, 0.08);
-    padding: 10px 10px;
-    flex-direction: column;
-    gap: 6px;
-    align-items: center;
+    margin: 0 -0px;     /* flush to edges */
   }
+
+  /* Remove the body padding that was compensating for fixed bar */
+  body { padding-bottom: 0; }
+  footer { padding-bottom: 16px; }
+}
   .mcta-promo {
     display: flex;
     align-items: center;
@@ -2227,6 +2241,28 @@
     }
     lastScroll = scrollY;
   });
+
+  // Fix mobile CTA bar inside iframe — switches to sticky positioning
+(function() {
+  const bar = document.querySelector('.mobile-cta-bar');
+  if (!bar) return;
+
+  function applyIframeFix() {
+    bar.style.position = 'sticky';
+    bar.style.bottom = '0';
+    bar.style.left = '0';
+    bar.style.right = '0';
+    bar.style.width = '100%';
+    bar.style.marginTop = 'auto';
+    // Move to very end of body so sticky anchors to bottom
+    document.body.appendChild(bar);
+  }
+
+  // Apply if inside iframe OR if on mobile (both cases need it)
+  if (window.self !== window.top || window.innerWidth <= 768) {
+    applyIframeFix();
+  }
+})();
 
 </script>
 </body>
